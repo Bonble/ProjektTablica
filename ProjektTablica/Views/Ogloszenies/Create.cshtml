@@ -1,0 +1,62 @@
+﻿@model ProjektTablica.Models.Ogloszenie
+
+@{
+    ViewData["Title"] = "Dodaj ogłoszenie";
+}
+<script>
+    function potwierdz() {
+        var tytul = document.getElementById('tytul').value;
+
+        if (!confirm("Czy chcesz dodać ogłoszenie o tytule: " + tytul)) {
+            event.preventDefault();
+        }else{
+            $(function () {
+                $("#_frmSubmitId").submit(function () {
+                    event.preventDefault();  
+
+                    var formdata = $("#_frmSubmitId").serialize();   
+
+                    $.ajax({
+                        url: '@Url.Action("// Create", "// OgloszeniesController")',
+                        type: 'POST',
+                        data: formdata,
+                        success: function (result) {
+                        }
+                    });
+                });
+            })
+        }
+    }
+</script>
+<h1>Dodaj</h1>
+
+<h4>Ogłoszenie</h4>
+<hr />
+@using(Html.BeginForm(null, null, FormMethod.Post, new {@id = "_frmSubmitId", role = "form"}))
+{
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Tytul" class="control-label">Tytuł</label>
+                <input asp-for="Tytul" class="form-control"  id="tytul"/>
+                <span asp-validation-for="Tytul" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tresc" class="control-label">Treść</label>
+                <input asp-for="Tresc" class="form-control" />
+                <span asp-validation-for="Tresc" class="text-danger"></span>
+            </div>
+        </form>
+        <button onclick="potwierdz();">Dodaj</button>
+    </div>
+</div>
+}
+<div>
+    <a asp-action="Index">Wróć</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
